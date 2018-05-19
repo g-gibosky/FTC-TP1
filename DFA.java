@@ -19,7 +19,13 @@ public class DFA {
 		
 	// }
 
-	public static void converter (HashMap<String, Lista_dfa> dfa, ArrayList<String> e, ArrayList<Character> alfabeto, HashIndiretoLista fa, String [] ts){
+	public static void converter (HashMap<String, Lista_dfa> dfa, ArrayList<String> e, ArrayList<Character> alfabeto, HashIndiretoLista fa){
+		int q = 0;
+		boolean t = false;
+		String [] ts = new String[2];
+		for (int a = 0;a < 2 ;a++ ) {
+			ts[a] = "";
+		}
 		for (String key : dfa.keySet()) {
 			if (e.contains(key)) {
 				System.out.println("Chave: "+key);
@@ -29,10 +35,25 @@ public class DFA {
 						int counter = 0;
 						for (Celula f = fa.tabela[Integer.parseInt(s[k])].getPrimeiro().prox; f != null; f = f.prox) {
 							if ( f.peso == alfabeto.get(j) ) {
+								System.out.println("Estado- "+ts[j]);
 								if (ts[j] == "") {
 									ts[j] += Integer.toString(f.elemento);
 								}else{
-									ts[j] += ","+Integer.toString(f.elemento);
+									String [] teste = ts[j].split(",");
+									for (int z = 0; z < teste.length;z++) {
+										System.out.println("Teste - "+teste[z]);
+										System.out.println("Novo elemento - "+Integer.toString(f.elemento));
+										if (teste[z].equals(Integer.toString(f.elemento))) {
+											t = false;
+											break;
+										}else{
+											System.out.println("Elemento Apos- "+ts[j]);
+											t = true;
+										}
+									}
+									if (t == true) {
+										ts[j] += ","+Integer.toString(f.elemento);
+									}
 								}
 								counter++;
 							}
@@ -136,14 +157,10 @@ public class DFA {
 		// a.mostrar();
 		dfa.put( "0",  a);
 		dfa.put( "0,1",  a);
-		String [] ts = new String[2];
-		for (i = 0;i < 2 ;i++ ) {
-			ts[i] = "";
-		}
 		ArrayList<String> estados_visitados = new ArrayList<String>();
 		/*Parte que gera tudo*/
 		estados_visitados.add("0");
-		converter(dfa, estados_visitados, alfabeto, fa, ts);
+		converter(dfa, estados_visitados, alfabeto, fa);
 		for (String key : dfa.keySet()) {
 			System.out.println("Chave: "+key);
 			a = dfa.get(key);
